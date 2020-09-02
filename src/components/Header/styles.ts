@@ -1,7 +1,8 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 interface ContainerProps {
   size?: 'small' | 'large';
+  currentPage: 'list' | 'import';
 }
 
 export const Container = styled.div<ContainerProps>`
@@ -22,15 +23,47 @@ export const Container = styled.div<ContainerProps>`
         text-decoration: none;
         font-size: 16px;
         transition: opacity 0.2s;
+        position: relative;
+        display: inline-block;
+        opacity: 0.6;
 
         & + a {
           margin-left: 32px;
         }
 
         &:hover {
-          opacity: 0.6;
+          opacity: 0.6 !important;
+        }
+
+        &:after {
+          content: '';
+          width: 100%;
+          height: 2px;
+          position: absolute;
+          bottom: -10px;
+          left: 0;
+          margin: 0 auto;
         }
       }
+
+      ${({ currentPage }) =>
+        currentPage === 'list'
+          ? css`
+              #list:after {
+                background-color: #ff872c;
+              }
+              #list {
+                opacity: 1;
+              }
+            `
+          : css`
+              #import:after {
+                background-color: #ff872c;
+              }
+              #import {
+                opacity: 1;
+              }
+            `}
     }
   }
 `;

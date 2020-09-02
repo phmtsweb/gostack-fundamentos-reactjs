@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 
 import filesize from 'filesize';
 
@@ -20,27 +20,39 @@ interface FileProps {
 
 const Import: React.FC = () => {
   const [uploadedFiles, setUploadedFiles] = useState<FileProps[]>([]);
-  const history = useHistory();
+  // const history = useHistory();
 
   async function handleUpload(): Promise<void> {
-    // const data = new FormData();
+    const data = new FormData();
+    uploadedFiles.forEach(uploadedFile =>
+      data.append('file', uploadedFile.file, uploadedFile.name),
+    );
 
     // TODO
 
     try {
-      // await api.post('/transactions/import', data);
+      await api.post('/transactions/import', data);
     } catch (err) {
-      // console.log(err.response.error);
+      console.error(err);
     }
   }
 
   function submitFile(files: File[]): void {
-    // TODO
+    const uploadedFilesTmp = files.map(fileItem => {
+      const { name, size } = fileItem;
+      const uploadedFileTmp: FileProps = {
+        file: fileItem,
+        name,
+        readableSize: filesize(size),
+      };
+      return uploadedFileTmp;
+    });
+    setUploadedFiles([...uploadedFiles, ...uploadedFilesTmp]);
   }
 
   return (
     <>
-      <Header size="small" />
+      <Header size="small" currentPage="import" />
       <Container>
         <Title>Importar uma transação</Title>
         <ImportFileContainer>
